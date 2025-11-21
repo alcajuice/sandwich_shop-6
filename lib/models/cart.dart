@@ -67,7 +67,8 @@ class Cart extends ChangeNotifier {
   /// Returns a map with keys:
   /// - 'merged': bool whether a merge happened
   /// - 'finalQuantity': int final quantity for the newSandwich entry
-  Map<String, dynamic> editItem(Sandwich oldSandwich, Sandwich newSandwich, {int? maxQuantity}) {
+  Map<String, dynamic> editItem(Sandwich oldSandwich, Sandwich newSandwich,
+      {int? maxQuantity}) {
     if (!_items.containsKey(oldSandwich)) {
       return {'merged': false, 'finalQuantity': 0};
     }
