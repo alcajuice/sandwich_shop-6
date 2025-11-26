@@ -317,5 +317,34 @@ Out of scope / Assumptions
 - Add unit tests in `test/repositories` and widget tests in `test/views`.
 - Run test suite and address any failures, then demo the flows.
 
-**PROMPT 3**
+**PROMPT 3: About Screen & "about us" link**
+
+User: "In the program, how do we access the about screen"
+
+Assistant:
+- Use the named route: `Navigator.pushNamed(context, '/about');`
+- Or push directly: `Navigator.push(context, MaterialPageRoute(builder: (_) => AboutScreen()));`
+- `lib/main.dart` already registers `'/about'` in `routes` so the named route is available.
+
+User: "I would like there to be text under the logo int the top left that says 'about us'. This should be similar to a hyperlink that would take us to the about_screen page"
+
+Assistant:
+- I will add a small under-logo, underlined blue `Text` that navigates to `'/about'` when tapped. Implemented via `GestureDetector(onTap: () => Navigator.pushNamed(context, '/about'))` wrapping the `Text('about us')`.
+- I applied the change to `lib/views/cart_screen.dart`.
+
+User: "could you add it to all the screens, since the logo is visible on every screen"
+
+Assistant:
+- I searched for `Image.asset('assets/images/logo.png')` and updated each file that contains it (`cart_screen.dart` and `order_screen.dart`) to include the under-logo link.
+- For each screen I added the same underlined blue `Text('about us')` with `GestureDetector` to navigate to `'/about'`.
+
+User: "the text is overflowed by 70 pixels. Instead, could you place the about us button in the top middle of the page"
+
+Assistant:
+- I moved the `about us` link from the `leading` area to the centered `AppBar` title on both `CartScreen` and `OrderScreen`.
+- The `title` is now a `Column` that renders the screen title and the small underlined `about us` link below it; `centerTitle: true` keeps it in the top middle and avoids overflow.
+
+Notes:
+- The `about us` link uses the named route `'/about'` defined in `lib/main.dart`.
+- Optionally, `InkWell` can be used (wrapped in `Material`) for a ripple effect instead of `GestureDetector`.
 
