@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sandwich_shop/views/app_styles.dart';
+import 'package:sandwich_shop/models/auth.dart';
+import 'package:sandwich_shop/views/login_screen.dart';
 import 'package:sandwich_shop/views/order_screen.dart';
 import 'package:sandwich_shop/models/cart.dart';
 import 'package:sandwich_shop/models/sandwich.dart';
@@ -18,11 +20,13 @@ class CartScreen extends StatefulWidget {
 
 class _CartScreenState extends State<CartScreen> {
   void _onCartChanged() => setState(() {});
+  void _onAuthChanged() => setState(() {});
 
   @override
   void initState() {
     super.initState();
     widget.cart.addListener(_onCartChanged);
+    Auth.instance.addListener(_onAuthChanged);
     WidgetsBinding.instance
         .addPostFrameCallback((_) => _clampQuantitiesIfNeeded());
   }
@@ -39,6 +43,7 @@ class _CartScreenState extends State<CartScreen> {
   @override
   void dispose() {
     widget.cart.removeListener(_onCartChanged);
+    Auth.instance.removeListener(_onAuthChanged);
     super.dispose();
   }
 
@@ -228,6 +233,24 @@ class _CartScreenState extends State<CartScreen> {
             ),
           ],
         ),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 8.0),
+            child: TextButton(
+              onPressed: () async {
+                await Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const LoginScreen()),
+                );
+                setState(() {});
+              },
+              child: Text(
+                Auth.instance.isLoggedIn ? Auth.instance.username! : 'Login',
+                style: const TextStyle(color: Colors.white),
+              ),
+            ),
+          ),
+        ],
       ),
       body: Center(
         child: SingleChildScrollView(

@@ -3,6 +3,8 @@ import 'package:sandwich_shop/views/app_styles.dart';
 import 'package:sandwich_shop/models/cart.dart';
 import 'package:sandwich_shop/models/sandwich.dart';
 import 'package:sandwich_shop/repositories/pricing_repository.dart';
+import 'package:sandwich_shop/models/auth.dart';
+import 'package:sandwich_shop/views/login_screen.dart';
 
 class CheckoutScreen extends StatefulWidget {
   final Cart cart;
@@ -15,6 +17,19 @@ class CheckoutScreen extends StatefulWidget {
 
 class _CheckoutScreenState extends State<CheckoutScreen> {
   bool _isProcessing = false;
+  void _onAuthChanged() => setState(() {});
+
+  @override
+  void initState() {
+    super.initState();
+    Auth.instance.addListener(_onAuthChanged);
+  }
+
+  @override
+  void dispose() {
+    Auth.instance.removeListener(_onAuthChanged);
+    super.dispose();
+  }
 
   Future<void> _processPayment() async {
     setState(() {
@@ -129,6 +144,24 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Checkout', style: heading1),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 8.0),
+            child: TextButton(
+              onPressed: () async {
+                await Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const LoginScreen()),
+                );
+                setState(() {});
+              },
+              child: Text(
+                Auth.instance.isLoggedIn ? Auth.instance.username! : 'Login',
+                style: const TextStyle(color: Colors.white),
+              ),
+            ),
+          ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16.0),

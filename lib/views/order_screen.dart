@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sandwich_shop/views/app_styles.dart';
+import 'package:sandwich_shop/models/auth.dart';
+import 'package:sandwich_shop/views/login_screen.dart';
 import 'package:sandwich_shop/views/cart_screen.dart';
 import 'package:sandwich_shop/models/cart.dart';
 import 'package:sandwich_shop/models/sandwich.dart';
@@ -30,13 +32,17 @@ class _OrderScreenState extends State<OrderScreen> {
     _notesController.addListener(() {
       setState(() {});
     });
+    Auth.instance.addListener(_onAuthChanged);
   }
 
   @override
   void dispose() {
     _notesController.dispose();
+    Auth.instance.removeListener(_onAuthChanged);
     super.dispose();
   }
+
+  void _onAuthChanged() => setState(() {});
 
   void _addToCart() {
     if (_quantity > 0) {
@@ -153,6 +159,24 @@ class _OrderScreenState extends State<OrderScreen> {
             ),
           ],
         ),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 8.0),
+            child: TextButton(
+              onPressed: () async {
+                await Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const LoginScreen()),
+                );
+                setState(() {});
+              },
+              child: Text(
+                Auth.instance.isLoggedIn ? Auth.instance.username! : 'Login',
+                style: const TextStyle(color: Colors.white),
+              ),
+            ),
+          ),
+        ],
       ),
       body: Center(
         child: SingleChildScrollView(
