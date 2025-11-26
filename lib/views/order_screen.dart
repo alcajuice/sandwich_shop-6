@@ -127,13 +127,31 @@ class _OrderScreenState extends State<OrderScreen> {
         leading: Padding(
           padding: const EdgeInsets.all(8.0),
           child: SizedBox(
-            height: 100,
+            height: 72,
             child: Image.asset('assets/images/logo.png'),
           ),
         ),
-        title: const Text(
-          'Sandwich Counter',
-          style: heading1,
+        centerTitle: true,
+        title: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Text(
+              'Sandwich Counter',
+              style: heading1,
+            ),
+            const SizedBox(height: 2),
+            GestureDetector(
+              onTap: () => Navigator.pushNamed(context, '/about'),
+              child: const Text(
+                'about us',
+                style: TextStyle(
+                  color: Colors.blue,
+                  decoration: TextDecoration.underline,
+                  fontSize: 12,
+                ),
+              ),
+            ),
+          ],
         ),
       ),
       body: Center(
