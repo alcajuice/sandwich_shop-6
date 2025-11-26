@@ -148,6 +148,11 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
           Padding(
             padding: const EdgeInsets.only(right: 8.0),
             child: TextButton(
+              style: TextButton.styleFrom(
+                backgroundColor: Colors.grey,
+                foregroundColor: Colors.white,
+                padding: const EdgeInsets.symmetric(horizontal: 12.0),
+              ),
               onPressed: () async {
                 await Navigator.push(
                   context,
@@ -156,9 +161,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                 setState(() {});
               },
               child: Text(
-                Auth.instance.isLoggedIn ? Auth.instance.username! : 'Login',
-                style: const TextStyle(color: Colors.white),
-              ),
+                  Auth.instance.isLoggedIn ? Auth.instance.username! : 'Login'),
             ),
           ),
         ],
