@@ -41,7 +41,8 @@ void main() {
       expect(find.text('Cart View'), findsOneWidget);
       expect(find.text('Veggie Delight'), findsOneWidget);
       expect(find.text('Footlong on white bread'), findsOneWidget);
-      expect(find.text('Qty: 2 - £22.00'), findsOneWidget);
+      expect(find.text('Qty: 2'), findsOneWidget);
+      expect(find.text('£22.00'), findsOneWidget);
       expect(find.text('Total: £22.00'), findsOneWidget);
     });
 
@@ -72,8 +73,10 @@ void main() {
       expect(find.text('Chicken Teriyaki'), findsOneWidget);
       expect(find.text('Footlong on white bread'), findsOneWidget);
       expect(find.text('Six-inch on wheat bread'), findsOneWidget);
-      expect(find.text('Qty: 1 - £11.00'), findsOneWidget);
-      expect(find.text('Qty: 3 - £21.00'), findsOneWidget);
+      expect(find.text('Qty: 1'), findsOneWidget);
+      expect(find.text('£11.00'), findsOneWidget);
+      expect(find.text('Qty: 3'), findsOneWidget);
+      expect(find.text('£21.00'), findsOneWidget);
       expect(find.text('Total: £32.00'), findsOneWidget);
     });
 
@@ -135,7 +138,8 @@ void main() {
 
       await tester.pumpWidget(app);
 
-      expect(find.text('Qty: 3 - £33.00'), findsOneWidget);
+      expect(find.text('Qty: 3'), findsOneWidget);
+      expect(find.text('£33.00'), findsOneWidget);
       expect(find.text('Total: £33.00'), findsOneWidget);
     });
   });
