@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sandwich_shop/views/app_styles.dart';
+import 'package:sandwich_shop/models/cart.dart';
 // No direct cart model import here; use named routes to navigate between pages.
 // Auth import removed because login control moved out of scaffold
 
@@ -63,7 +64,32 @@ class _AppScaffoldState extends State<AppScaffold> {
           onTap: () => _navigateTo(AppPage.order),
         ),
         ListTile(
-          leading: const Icon(Icons.shopping_cart),
+          leading: AnimatedBuilder(
+            animation: appCart,
+            builder: (context, _) {
+              final hasItems = appCart.countOfItems > 0;
+              return Stack(
+                clipBehavior: Clip.none,
+                children: [
+                  const Icon(Icons.shopping_cart),
+                  if (hasItems)
+                    Positioned(
+                      right: -6,
+                      top: -6,
+                      child: Container(
+                        height: 10,
+                        width: 10,
+                        decoration: BoxDecoration(
+                          color: Colors.red,
+                          shape: BoxShape.circle,
+                          border: Border.all(color: Colors.white, width: 1.2),
+                        ),
+                      ),
+                    ),
+                ],
+              );
+            },
+          ),
           title: const Text('Cart'),
           selected: widget.selectedPage == AppPage.cart,
           onTap: () => _navigateTo(AppPage.cart),
@@ -154,14 +180,42 @@ class _AppScaffoldState extends State<AppScaffold> {
                     onDestinationSelected: (index) =>
                         _navigateTo(AppPage.values[index]),
                     labelType: NavigationRailLabelType.all,
-                    destinations: const [
-                      NavigationRailDestination(
+                    destinations: [
+                      const NavigationRailDestination(
                           icon: Icon(Icons.store), label: Text('Order')),
                       NavigationRailDestination(
-                          icon: Icon(Icons.shopping_cart), label: Text('Cart')),
-                      NavigationRailDestination(
+                        icon: AnimatedBuilder(
+                          animation: appCart,
+                          builder: (context, _) {
+                            final hasItems = appCart.countOfItems > 0;
+                            return Stack(
+                              clipBehavior: Clip.none,
+                              children: [
+                                const Icon(Icons.shopping_cart),
+                                if (hasItems)
+                                  Positioned(
+                                    right: -6,
+                                    top: -6,
+                                    child: Container(
+                                      height: 10,
+                                      width: 10,
+                                      decoration: BoxDecoration(
+                                        color: Colors.red,
+                                        shape: BoxShape.circle,
+                                        border: Border.all(
+                                            color: Colors.white, width: 1.2),
+                                      ),
+                                    ),
+                                  ),
+                              ],
+                            );
+                          },
+                        ),
+                        label: const Text('Cart'),
+                      ),
+                      const NavigationRailDestination(
                           icon: Icon(Icons.payment), label: Text('Checkout')),
-                      NavigationRailDestination(
+                      const NavigationRailDestination(
                           icon: Icon(Icons.info), label: Text('About')),
                     ],
                   ),
