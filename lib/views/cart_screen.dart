@@ -7,6 +7,7 @@ import 'package:sandwich_shop/models/cart.dart';
 import 'package:sandwich_shop/models/sandwich.dart';
 import 'package:sandwich_shop/repositories/pricing_repository.dart';
 import 'package:sandwich_shop/views/checkout_screen.dart';
+import 'package:sandwich_shop/views/app_scaffold.dart';
 
 class CartScreen extends StatefulWidget {
   final Cart cart;
@@ -202,145 +203,79 @@ class _CartScreenState extends State<CartScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        leading: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: SizedBox(
-            height: 72,
-            child: Image.asset('assets/images/logo.png'),
-          ),
+    final Widget loginAction = Padding(
+      padding: const EdgeInsets.only(right: 8.0),
+      child: TextButton(
+        style: TextButton.styleFrom(
+          backgroundColor: Colors.grey,
+          foregroundColor: Colors.white,
+          padding: const EdgeInsets.symmetric(horizontal: 12.0),
         ),
-        centerTitle: true,
-        title: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Text(
-              'Cart View',
-              style: heading1,
-            ),
-            const SizedBox(height: 2),
-            GestureDetector(
-              onTap: () => Navigator.pushNamed(context, '/about'),
-              child: const Text(
-                'about us',
-                style: TextStyle(
-                  color: Colors.blue,
-                  decoration: TextDecoration.underline,
-                  fontSize: 12,
-                ),
-              ),
-            ),
-          ],
-        ),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 8.0),
-            child: TextButton(
-              style: TextButton.styleFrom(
-                backgroundColor: Colors.grey,
-                foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(horizontal: 12.0),
-              ),
-              onPressed: () async {
-                await Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (_) => const LoginScreen()),
-                );
-                setState(() {});
-              },
-              child: Text(
-                  Auth.instance.isLoggedIn ? Auth.instance.username! : 'Login'),
-            ),
-          ),
-        ],
+        onPressed: () async {
+          await Navigator.push(
+            context,
+            MaterialPageRoute(builder: (_) => const LoginScreen()),
+          );
+          setState(() {});
+        },
+        child:
+            Text(Auth.instance.isLoggedIn ? Auth.instance.username! : 'Login'),
       ),
-      body: Center(
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              const SizedBox(height: 20),
-              Builder(
-                builder: (BuildContext context) {
-                  final bool cartHasItems = widget.cart.items.isNotEmpty;
-                  if (cartHasItems) {
-                    return StyledButton(
-                      onPressed: _navigateToCheckout,
-                      icon: Icons.payment,
-                      label: 'Checkout',
-                      backgroundColor: Colors.orange,
-                    );
-                  } else {
-                    return const SizedBox.shrink();
-                  }
-                },
-              ),
-              const SizedBox(height: 20),
-              for (MapEntry<Sandwich, int> entry in widget.cart.items.entries)
-                Column(
-                  children: [
-                    Text(entry.key.name, style: heading2),
-                    Text(
-                      '${_getSizeText(entry.key.isFootlong)} on ${entry.key.breadType.name} bread',
-                      style: normalText,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        IconButton(
-                          tooltip: 'Decrease quantity',
-                          onPressed: entry.value > 1
-                              ? () {
-                                  widget.cart.updateItemQuantity(
-                                    entry.key,
-                                    entry.value - 1,
-                                    maxQuantity: widget.maxQuantity,
-                                  );
-                                }
-                              : () async {
-                                  final confirmed =
-                                      await _showRemoveConfirmation(
-                                          entry.key, entry.value);
-                                  if (confirmed == true) {
-                                    final previousQty =
-                                        widget.cart.removeCompletely(entry.key);
-                                    ScaffoldMessenger.of(context)
-                                        .clearSnackBars();
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                        content:
-                                            Text('${entry.key.name} removed'),
-                                        action: SnackBarAction(
-                                          label: 'Undo',
-                                          onPressed: () {
-                                            if (previousQty > 0) {
-                                              widget.cart.add(entry.key,
-                                                  quantity: previousQty);
-                                            }
-                                          },
-                                        ),
-                                        duration: const Duration(seconds: 4),
-                                      ),
-                                    );
-                                  }
-                                },
-                          icon: const Icon(Icons.remove),
-                        ),
-                        GestureDetector(
-                          onTap: () async {
-                            final result = await _showQuantityInputDialog(
-                                entry.key, entry.value);
-                            if (result != null) {
-                              if (result <= 0) {
+    );
+
+    final Widget body = Center(
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            const SizedBox(height: 20),
+            Builder(
+              builder: (BuildContext context) {
+                final bool cartHasItems = widget.cart.items.isNotEmpty;
+                if (cartHasItems) {
+                  return StyledButton(
+                    onPressed: _navigateToCheckout,
+                    icon: Icons.payment,
+                    label: 'Checkout',
+                    backgroundColor: Colors.orange,
+                  );
+                } else {
+                  return const SizedBox.shrink();
+                }
+              },
+            ),
+            const SizedBox(height: 20),
+            for (MapEntry<Sandwich, int> entry in widget.cart.items.entries)
+              Column(
+                children: [
+                  Text(entry.key.name, style: heading2),
+                  Text(
+                    '${_getSizeText(entry.key.isFootlong)} on ${entry.key.breadType.name} bread',
+                    style: normalText,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      IconButton(
+                        tooltip: 'Decrease quantity',
+                        onPressed: entry.value > 1
+                            ? () {
+                                widget.cart.updateItemQuantity(
+                                  entry.key,
+                                  entry.value - 1,
+                                  maxQuantity: widget.maxQuantity,
+                                );
+                              }
+                            : () async {
+                                final scaffold = ScaffoldMessenger.of(context);
                                 final confirmed = await _showRemoveConfirmation(
-                                    entry.key, result);
+                                    entry.key, entry.value);
+                                if (!mounted) return;
                                 if (confirmed == true) {
                                   final previousQty =
                                       widget.cart.removeCompletely(entry.key);
-                                  ScaffoldMessenger.of(context)
-                                      .clearSnackBars();
-                                  ScaffoldMessenger.of(context).showSnackBar(
+                                  scaffold.clearSnackBars();
+                                  scaffold.showSnackBar(
                                     SnackBar(
                                       content:
                                           Text('${entry.key.name} removed'),
@@ -357,64 +292,102 @@ class _CartScreenState extends State<CartScreen> {
                                     ),
                                   );
                                 }
-                              } else if (result > widget.maxQuantity) {
-                                _showMessage(
-                                    'Maximum ${widget.maxQuantity} allowed per item');
-                                widget.cart.updateItemQuantity(
-                                    entry.key, widget.maxQuantity,
-                                    maxQuantity: widget.maxQuantity);
-                              } else {
-                                widget.cart.updateItemQuantity(
-                                    entry.key, result,
-                                    maxQuantity: widget.maxQuantity);
+                              },
+                        icon: const Icon(Icons.remove),
+                      ),
+                      GestureDetector(
+                        onTap: () async {
+                          final scaffold = ScaffoldMessenger.of(context);
+                          final result = await _showQuantityInputDialog(
+                              entry.key, entry.value);
+                          if (!mounted) return;
+                          if (result != null) {
+                            if (result <= 0) {
+                              final confirmed = await _showRemoveConfirmation(
+                                  entry.key, result);
+                              if (!mounted) return;
+                              if (confirmed == true) {
+                                final previousQty =
+                                    widget.cart.removeCompletely(entry.key);
+                                scaffold.clearSnackBars();
+                                scaffold.showSnackBar(
+                                  SnackBar(
+                                    content: Text('${entry.key.name} removed'),
+                                    action: SnackBarAction(
+                                      label: 'Undo',
+                                      onPressed: () {
+                                        if (previousQty > 0) {
+                                          widget.cart.add(entry.key,
+                                              quantity: previousQty);
+                                        }
+                                      },
+                                    ),
+                                    duration: const Duration(seconds: 4),
+                                  ),
+                                );
                               }
+                            } else if (result > widget.maxQuantity) {
+                              _showMessage(
+                                  'Maximum ${widget.maxQuantity} allowed per item');
+                              widget.cart.updateItemQuantity(
+                                  entry.key, widget.maxQuantity,
+                                  maxQuantity: widget.maxQuantity);
+                            } else {
+                              widget.cart.updateItemQuantity(entry.key, result,
+                                  maxQuantity: widget.maxQuantity);
                             }
-                          },
-                          child: Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 12.0),
-                            child: Text('Qty: ${entry.value}', style: heading2),
-                          ),
+                          }
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                          child: Text('Qty: ${entry.value}', style: heading2),
                         ),
-                        IconButton(
-                          tooltip: 'Increase quantity',
-                          onPressed: entry.value < widget.maxQuantity
-                              ? () {
-                                  widget.cart.updateItemQuantity(
-                                    entry.key,
-                                    entry.value + 1,
-                                    maxQuantity: widget.maxQuantity,
-                                  );
-                                }
-                              : null,
-                          icon: const Icon(Icons.add),
-                        ),
-                        const SizedBox(width: 12),
-                        Text(
-                            '£${_getItemPrice(entry.key, entry.value).toStringAsFixed(2)}',
-                            style: normalText),
-                      ],
-                    ),
-                    const SizedBox(height: 20),
-                  ],
-                ),
-              Text(
-                'Total: £${widget.cart.totalPrice.toStringAsFixed(2)}',
-                style: heading2,
-                textAlign: TextAlign.center,
+                      ),
+                      IconButton(
+                        tooltip: 'Increase quantity',
+                        onPressed: entry.value < widget.maxQuantity
+                            ? () {
+                                widget.cart.updateItemQuantity(
+                                  entry.key,
+                                  entry.value + 1,
+                                  maxQuantity: widget.maxQuantity,
+                                );
+                              }
+                            : null,
+                        icon: const Icon(Icons.add),
+                      ),
+                      const SizedBox(width: 12),
+                      Text(
+                          '£${_getItemPrice(entry.key, entry.value).toStringAsFixed(2)}',
+                          style: normalText),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+                ],
               ),
-              const SizedBox(height: 20),
-              StyledButton(
-                onPressed: _goBack,
-                icon: Icons.arrow_back,
-                label: 'Back to Order',
-                backgroundColor: Colors.grey,
-              ),
-              const SizedBox(height: 20),
-            ],
-          ),
+            Text(
+              'Total: £${widget.cart.totalPrice.toStringAsFixed(2)}',
+              style: heading2,
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 20),
+            StyledButton(
+              onPressed: _goBack,
+              icon: Icons.arrow_back,
+              label: 'Back to Order',
+              backgroundColor: Colors.grey,
+            ),
+            // const SizedBox(height: 20),
+          ],
         ),
       ),
+    );
+    return AppScaffold(
+      title: 'Cart View',
+      selectedPage: AppPage.cart,
+      maxQuantity: widget.maxQuantity,
+      actions: [loginAction],
+      body: body,
     );
   }
 }

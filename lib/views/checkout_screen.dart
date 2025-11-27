@@ -5,6 +5,7 @@ import 'package:sandwich_shop/models/sandwich.dart';
 import 'package:sandwich_shop/repositories/pricing_repository.dart';
 import 'package:sandwich_shop/models/auth.dart';
 import 'package:sandwich_shop/views/login_screen.dart';
+import 'package:sandwich_shop/views/app_scaffold.dart';
 
 class CheckoutScreen extends StatefulWidget {
   final Cart cart;
@@ -141,31 +142,30 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
       );
     }
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Checkout', style: heading1),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 8.0),
-            child: TextButton(
-              style: TextButton.styleFrom(
-                backgroundColor: Colors.grey,
-                foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(horizontal: 12.0),
-              ),
-              onPressed: () async {
-                await Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (_) => const LoginScreen()),
-                );
-                setState(() {});
-              },
-              child: Text(
-                  Auth.instance.isLoggedIn ? Auth.instance.username! : 'Login'),
-            ),
-          ),
-        ],
+    final Widget loginAction = Padding(
+      padding: const EdgeInsets.only(right: 8.0),
+      child: TextButton(
+        style: TextButton.styleFrom(
+          backgroundColor: Colors.grey,
+          foregroundColor: Colors.white,
+          padding: const EdgeInsets.symmetric(horizontal: 12.0),
+        ),
+        onPressed: () async {
+          await Navigator.push(
+            context,
+            MaterialPageRoute(builder: (_) => const LoginScreen()),
+          );
+          setState(() {});
+        },
+        child:
+            Text(Auth.instance.isLoggedIn ? Auth.instance.username! : 'Login'),
       ),
+    );
+
+    return AppScaffold(
+      title: 'Checkout',
+      selectedPage: AppPage.checkout,
+      actions: [loginAction],
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16.0),
         child: Column(

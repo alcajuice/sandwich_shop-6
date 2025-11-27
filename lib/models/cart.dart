@@ -133,3 +133,6 @@ class Cart extends ChangeNotifier {
     return 0;
   }
 }
+
+// Global cart instance used across the app for simple shared state.
+final Cart appCart = Cart();
