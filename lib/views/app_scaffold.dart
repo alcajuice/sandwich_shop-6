@@ -80,16 +80,28 @@ class _AppScaffoldState extends State<AppScaffold> {
                         const Icon(Icons.shopping_cart),
                         if (hasItems)
                           Positioned(
-                            right: -6,
-                            top: -6,
+                            right: -8,
+                            top: -8,
                             child: Container(
-                              height: 10,
-                              width: 10,
+                              padding: const EdgeInsets.all(1.5),
+                              constraints: const BoxConstraints(
+                                  minWidth: 16, minHeight: 16),
                               decoration: BoxDecoration(
                                 color: Colors.red,
-                                shape: BoxShape.circle,
+                                borderRadius: BorderRadius.circular(12),
                                 border:
                                     Border.all(color: Colors.white, width: 1.2),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  appCart.countOfItems > 9
+                                      ? '9+'
+                                      : '${appCart.countOfItems}',
+                                  style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.bold),
+                                ),
                               ),
                             ),
                           ),
@@ -201,16 +213,28 @@ class _AppScaffoldState extends State<AppScaffold> {
                                 const Icon(Icons.shopping_cart),
                                 if (hasItems)
                                   Positioned(
-                                    right: -6,
-                                    top: -6,
+                                    right: -8,
+                                    top: -8,
                                     child: Container(
-                                      height: 10,
-                                      width: 10,
+                                      padding: const EdgeInsets.all(1.5),
+                                      constraints: const BoxConstraints(
+                                          minWidth: 16, minHeight: 16),
                                       decoration: BoxDecoration(
                                         color: Colors.red,
-                                        shape: BoxShape.circle,
+                                        borderRadius: BorderRadius.circular(12),
                                         border: Border.all(
                                             color: Colors.white, width: 1.2),
+                                      ),
+                                      child: Center(
+                                        child: Text(
+                                          appCart.countOfItems > 9
+                                              ? '9+'
+                                              : '${appCart.countOfItems}',
+                                          style: const TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 10,
+                                              fontWeight: FontWeight.bold),
+                                        ),
                                       ),
                                     ),
                                   ),
