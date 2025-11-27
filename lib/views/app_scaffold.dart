@@ -57,55 +57,60 @@ class _AppScaffoldState extends State<AppScaffold> {
           decoration: BoxDecoration(color: Colors.transparent),
           child: SizedBox(height: 72),
         ),
-        ListTile(
-          leading: const Icon(Icons.store),
-          title: const Text('Order'),
-          selected: widget.selectedPage == AppPage.order,
-          onTap: () => _navigateTo(AppPage.order),
-        ),
-        ListTile(
-          leading: AnimatedBuilder(
-            animation: appCart,
-            builder: (context, _) {
-              final hasItems = appCart.countOfItems > 0;
-              return Stack(
-                clipBehavior: Clip.none,
-                children: [
-                  const Icon(Icons.shopping_cart),
-                  if (hasItems)
-                    Positioned(
-                      right: -6,
-                      top: -6,
-                      child: Container(
-                        height: 10,
-                        width: 10,
-                        decoration: BoxDecoration(
-                          color: Colors.red,
-                          shape: BoxShape.circle,
-                          border: Border.all(color: Colors.white, width: 1.2),
-                        ),
-                      ),
-                    ),
-                ],
-              );
-            },
+        // Icon-only drawer: use centered icon buttons (cart shows badge)
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8.0),
+          child: Column(
+            children: [
+              IconButton(
+                tooltip: 'Order',
+                icon: const Icon(Icons.store),
+                onPressed: () => _navigateTo(AppPage.order),
+              ),
+              IconButton(
+                tooltip: 'Cart',
+                onPressed: () => _navigateTo(AppPage.cart),
+                icon: AnimatedBuilder(
+                  animation: appCart,
+                  builder: (context, _) {
+                    final hasItems = appCart.countOfItems > 0;
+                    return Stack(
+                      clipBehavior: Clip.none,
+                      children: [
+                        const Icon(Icons.shopping_cart),
+                        if (hasItems)
+                          Positioned(
+                            right: -6,
+                            top: -6,
+                            child: Container(
+                              height: 10,
+                              width: 10,
+                              decoration: BoxDecoration(
+                                color: Colors.red,
+                                shape: BoxShape.circle,
+                                border:
+                                    Border.all(color: Colors.white, width: 1.2),
+                              ),
+                            ),
+                          ),
+                      ],
+                    );
+                  },
+                ),
+              ),
+              IconButton(
+                tooltip: 'Checkout',
+                icon: const Icon(Icons.payment),
+                onPressed: () => _navigateTo(AppPage.checkout),
+              ),
+              const Divider(),
+              IconButton(
+                tooltip: 'About',
+                icon: const Icon(Icons.info),
+                onPressed: () => _navigateTo(AppPage.about),
+              ),
+            ],
           ),
-          title: const Text('Cart'),
-          selected: widget.selectedPage == AppPage.cart,
-          onTap: () => _navigateTo(AppPage.cart),
-        ),
-        ListTile(
-          leading: const Icon(Icons.payment),
-          title: const Text('Checkout'),
-          selected: widget.selectedPage == AppPage.checkout,
-          onTap: () => _navigateTo(AppPage.checkout),
-        ),
-        const Divider(),
-        ListTile(
-          leading: const Icon(Icons.info),
-          title: const Text('About'),
-          selected: widget.selectedPage == AppPage.about,
-          onTap: () => _navigateTo(AppPage.about),
         ),
         const Spacer(),
       ],
@@ -118,6 +123,7 @@ class _AppScaffoldState extends State<AppScaffold> {
 
     // Responsive: below 700 use Drawer; >=700 show NavigationRail permanently
     if (width < 700) {
+      // Narrow layout: use a narrow drawer and icon-only content
       return Scaffold(
         appBar: AppBar(
           leading: SizedBox(
@@ -144,7 +150,7 @@ class _AppScaffoldState extends State<AppScaffold> {
           centerTitle: true,
           actions: widget.actions,
         ),
-        drawer: Drawer(child: _buildDrawerContent(context)),
+        drawer: Drawer(width: 72, child: _buildDrawerContent(context)),
         body: widget.body,
       );
     }
@@ -168,7 +174,7 @@ class _AppScaffoldState extends State<AppScaffold> {
         children: [
           // Left column with logo and navigation rail
           Container(
-            width: 120,
+            width: 72,
             color: Theme.of(context).colorScheme.surfaceContainerHighest,
             child: Column(
               children: [
@@ -179,10 +185,11 @@ class _AppScaffoldState extends State<AppScaffold> {
                     selectedIndex: AppPage.values.indexOf(widget.selectedPage),
                     onDestinationSelected: (index) =>
                         _navigateTo(AppPage.values[index]),
-                    labelType: NavigationRailLabelType.all,
+                    // icon-only rail
+                    labelType: NavigationRailLabelType.none,
                     destinations: [
                       const NavigationRailDestination(
-                          icon: Icon(Icons.store), label: Text('Order')),
+                          icon: Icon(Icons.store), label: Text('')),
                       NavigationRailDestination(
                         icon: AnimatedBuilder(
                           animation: appCart,
@@ -211,12 +218,12 @@ class _AppScaffoldState extends State<AppScaffold> {
                             );
                           },
                         ),
-                        label: const Text('Cart'),
+                        label: const Text(''),
                       ),
                       const NavigationRailDestination(
-                          icon: Icon(Icons.payment), label: Text('Checkout')),
+                          icon: Icon(Icons.payment), label: Text('')),
                       const NavigationRailDestination(
-                          icon: Icon(Icons.info), label: Text('About')),
+                          icon: Icon(Icons.info), label: Text('')),
                     ],
                   ),
                 ),
