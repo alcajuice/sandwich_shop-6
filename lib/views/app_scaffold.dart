@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sandwich_shop/views/app_styles.dart';
 // No direct cart model import here; use named routes to navigate between pages.
-import 'package:sandwich_shop/models/auth.dart';
+// Auth import removed because login control moved out of scaffold
 
 enum AppPage { order, cart, checkout, about }
 
@@ -91,17 +91,6 @@ class _AppScaffoldState extends State<AppScaffold> {
           onTap: () => _navigateTo(AppPage.about),
         ),
         const Spacer(),
-        ListTile(
-          leading: const Icon(Icons.login),
-          title: Text(Auth.instance.isLoggedIn
-              ? Auth.instance.username ?? 'User'
-              : 'Login'),
-          onTap: () async {
-            await Navigator.pushNamed(context, '/login');
-            setState(() {});
-          },
-        ),
-        const SizedBox(height: 12),
       ],
     );
   }
@@ -114,9 +103,14 @@ class _AppScaffoldState extends State<AppScaffold> {
     if (width < 700) {
       return Scaffold(
         appBar: AppBar(
-          title: Column(
+          title: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
+              SizedBox(
+                  height: 36,
+                  width: 36,
+                  child: Image.asset('assets/images/logo.png')),
+              const SizedBox(width: 8),
               Text(widget.title, style: heading1),
             ],
           ),
@@ -143,11 +137,8 @@ class _AppScaffoldState extends State<AppScaffold> {
             color: Theme.of(context).colorScheme.surfaceContainerHighest,
             child: Column(
               children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 12.0),
-                  child: SizedBox(
-                      height: 72, child: Image.asset('assets/images/logo.png')),
-                ),
+                // Logo moved to AppBar title; keep spacing here for visual balance
+                const SizedBox(height: 12),
                 Expanded(
                   child: NavigationRail(
                     selectedIndex: AppPage.values.indexOf(widget.selectedPage),
@@ -166,21 +157,7 @@ class _AppScaffoldState extends State<AppScaffold> {
                     ],
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 12.0),
-                  child: TextButton(
-                    style: TextButton.styleFrom(
-                        backgroundColor: Colors.grey,
-                        foregroundColor: Colors.white),
-                    onPressed: () async {
-                      await Navigator.pushNamed(context, '/login');
-                      setState(() {});
-                    },
-                    child: Text(Auth.instance.isLoggedIn
-                        ? Auth.instance.username ?? 'User'
-                        : 'Login'),
-                  ),
-                ),
+                const SizedBox(height: 12),
               ],
             ),
           ),
