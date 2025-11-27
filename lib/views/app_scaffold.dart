@@ -52,18 +52,9 @@ class _AppScaffoldState extends State<AppScaffold> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        DrawerHeader(
-          decoration: const BoxDecoration(color: Colors.transparent),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(
-                height: 72,
-                child: Image.asset('assets/images/logo.png'),
-              ),
-              const SizedBox(height: 8),
-            ],
-          ),
+        const DrawerHeader(
+          decoration: BoxDecoration(color: Colors.transparent),
+          child: SizedBox(height: 72),
         ),
         ListTile(
           leading: const Icon(Icons.store),
@@ -103,17 +94,27 @@ class _AppScaffoldState extends State<AppScaffold> {
     if (width < 700) {
       return Scaffold(
         appBar: AppBar(
-          title: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              SizedBox(
-                  height: 36,
-                  width: 36,
-                  child: Image.asset('assets/images/logo.png')),
-              const SizedBox(width: 8),
-              Text(widget.title, style: heading1),
-            ],
+          leading: SizedBox(
+            width: 96,
+            child: Row(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  child: SizedBox(
+                      height: 36,
+                      width: 36,
+                      child: Image.asset('assets/images/logo.png')),
+                ),
+                Builder(builder: (context) {
+                  return IconButton(
+                    icon: const Icon(Icons.menu),
+                    onPressed: () => Scaffold.of(context).openDrawer(),
+                  );
+                }),
+              ],
+            ),
           ),
+          title: Text(widget.title, style: heading1),
           centerTitle: true,
           actions: widget.actions,
         ),
@@ -125,6 +126,14 @@ class _AppScaffoldState extends State<AppScaffold> {
     // Wide layout: NavigationRail on the left, logo above it
     return Scaffold(
       appBar: AppBar(
+        leading: Padding(
+          padding: const EdgeInsets.only(left: 8.0),
+          child: SizedBox(
+            height: 40,
+            width: 40,
+            child: Image.asset('assets/images/logo.png'),
+          ),
+        ),
         title: Text(widget.title, style: heading1),
         centerTitle: true,
         actions: widget.actions,
